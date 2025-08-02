@@ -1,0 +1,1515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MGoddy Stream: The Vault of the King</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #1a1a1a;
+            --bg-tertiary: #2a2a2a;
+            --accent: #e50914;
+            --accent-hover: #f40612;
+            --text-primary: #ffffff;
+            --text-secondary: #b3b3b3;
+            --text-muted: #666666;
+            --border: #333333;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 1rem 2rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--accent);
+            cursor: pointer;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links li {
+            cursor: pointer;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links li:hover {
+            background: var(--bg-secondary);
+            color: var(--accent);
+        }
+
+        .nav-links li.active {
+            background: var(--accent);
+        }
+
+        .search-container {
+            display: flex;
+            align-items: center;
+            background: var(--bg-secondary);
+            border-radius: 25px;
+            padding: 0.5rem 1rem;
+            width: 300px;
+        }
+
+        .search-container input {
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            width: 100%;
+            outline: none;
+        }
+
+        .search-container i {
+            color: var(--text-secondary);
+            margin-right: 0.5rem;
+        }
+
+        .admin-btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .admin-btn:hover {
+            background: var(--accent-hover);
+        }
+
+        /* Main Content */
+        main {
+            margin-top: 80px;
+            min-height: calc(100vh - 80px);
+        }
+
+        .section {
+            display: none;
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        /* Homepage */
+        .hero-banner {
+            background: linear-gradient(135deg, var(--accent), #8b1538);
+            padding: 4rem 2rem;
+            border-radius: 15px;
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+        .hero-banner h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .hero-banner p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .carousel {
+            margin-bottom: 3rem;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .content-card {
+            background: var(--bg-secondary);
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .content-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(229, 9, 20, 0.3);
+        }
+
+        .content-thumbnail {
+            width: 100%;
+            height: 200px;
+            background: var(--bg-tertiary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: var(--text-muted);
+            position: relative;
+        }
+
+        .play-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(229, 9, 20, 0.8);
+            color: white;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .content-card:hover .play-overlay {
+            opacity: 1;
+        }
+
+        .content-info {
+            padding: 1rem;
+        }
+
+        .content-title {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .content-meta {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Video Player */
+        .video-player {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 2000;
+            padding: 2rem;
+        }
+
+        .video-container {
+            max-width: 90%;
+            max-height: 90%;
+            margin: auto;
+            background: black;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .video-container video {
+            width: 100%;
+            height: auto;
+            max-height: 70vh;
+        }
+
+        .video-info {
+            padding: 1rem;
+            background: var(--bg-secondary);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        /* Music Player */
+        .music-player {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: var(--bg-tertiary);
+            padding: 1rem 2rem;
+            border-top: 1px solid var(--border);
+            display: none;
+            z-index: 1500;
+        }
+
+        .player-controls {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .track-info {
+            flex: 1;
+        }
+
+        .controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .control-btn {
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .control-btn:hover {
+            background: var(--bg-secondary);
+            color: var(--accent);
+        }
+
+        .progress-bar {
+            flex: 2;
+            margin: 0 2rem;
+        }
+
+        .progress-bar input {
+            width: 100%;
+            accent-color: var(--accent);
+        }
+
+        /* Admin Panel */
+        .admin-panel {
+            background: var(--bg-secondary);
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .admin-form {
+            display: grid;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            padding: 0.75rem;
+            border-radius: 5px;
+            outline: none;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            border-color: var(--accent);
+        }
+
+        .btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            background: var(--accent-hover);
+        }
+
+        .btn-secondary {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border);
+        }
+
+        /* Live Stream */
+        .live-badge {
+            background: var(--accent);
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 10;
+        }
+
+        .live-badge::before {
+            content: "🔴 ";
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-links {
+                gap: 1rem;
+            }
+
+            .search-container {
+                width: 100%;
+                max-width: 300px;
+            }
+
+            .hero-banner h1 {
+                font-size: 2rem;
+            }
+
+            .content-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 1rem;
+            }
+
+            .video-container {
+                max-width: 95%;
+                max-height: 95%;
+            }
+
+            .player-controls {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .progress-bar {
+                margin: 0;
+                width: 100%;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid var(--border);
+            border-radius: 50%;
+            border-top-color: var(--accent);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--bg-secondary);
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--accent);
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <div class="logo">MGoddy Stream</div>
+            <ul class="nav-links">
+                <li class="nav-item active" data-section="home">Home</li>
+                <li class="nav-item" data-section="videos">Videos</li>
+                <li class="nav-item" data-section="music">Music</li>
+                <li class="nav-item" data-section="live">Live</li>
+            </ul>
+            <div class="search-container">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="Search content...">
+            </div>
+            <button class="admin-btn" onclick="toggleAdmin()">
+                <i class="fas fa-cog"></i> Admin
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Home Section -->
+        <section id="home" class="section active">
+            <div class="hero-banner">
+                <h1>The Vault of the King</h1>
+                <p>Premium entertainment at your fingertips. Experience MGoddy like never before.</p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">4.8M</div>
+                    <div class="stat-label">Total Views</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">156K</div>
+                    <div class="stat-label">Subscribers</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">89</div>
+                    <div class="stat-label">Videos</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">42</div>
+                    <div class="stat-label">Tracks</div>
+                </div>
+            </div>
+
+            <h2 class="section-title">Featured Content</h2>
+            <div class="content-grid" id="featuredContent">
+                <!-- Content will be populated by JavaScript -->
+            </div>
+
+            <h2 class="section-title">Trending Now</h2>
+            <div class="content-grid" id="trendingContent">
+                <!-- Content will be populated by JavaScript -->
+            </div>
+        </section>
+
+        <!-- Videos Section -->
+        <section id="videos" class="section">
+            <h2 class="section-title">Video Library</h2>
+            
+            <div class="admin-panel" id="videoAdminPanel" style="display: none;">
+                <h3>Add New Video</h3>
+                <form class="admin-form" id="videoForm">
+                    <div class="form-group">
+                        <label>Title</label>
+                        <input type="text" id="videoTitle" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea id="videoDescription" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Google Drive Link</label>
+                        <input type="url" id="videoUrl" required placeholder="https://drive.google.com/file/d/...">
+                    </div>
+                    <div class="form-group">
+                        <label>Category</label>
+                        <select id="videoCategory">
+                            <option value="drama">Drama</option>
+                            <option value="comedy">Comedy</option>
+                            <option value="tutorial">Tutorial</option>
+                            <option value="music-video">Music Video</option>
+                            <option value="documentary">Documentary</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn">Add Video</button>
+                </form>
+            </div>
+
+            <div class="content-grid" id="videosGrid">
+                <!-- Videos will be populated here -->
+            </div>
+        </section>
+
+        <!-- Music Section -->
+        <section id="music" class="section">
+            <h2 class="section-title">Music Library</h2>
+            
+            <div class="admin-panel" id="musicAdminPanel" style="display: none;">
+                <h3>Add New Track</h3>
+                <form class="admin-form" id="musicForm">
+                    <div class="form-group">
+                        <label>Track Title</label>
+                        <input type="text" id="trackTitle" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Artist</label>
+                        <input type="text" id="trackArtist" value="MGoddy">
+                    </div>
+                    <div class="form-group">
+                        <label>Album</label>
+                        <input type="text" id="trackAlbum">
+                    </div>
+                    <div class="form-group">
+                        <label>Google Drive Audio Link</label>
+                        <input type="url" id="trackUrl" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Genre</label>
+                        <select id="trackGenre">
+                            <option value="hip-hop">Hip Hop</option>
+                            <option value="afrobeat">Afrobeat</option>
+                            <option value="pop">Pop</option>
+                            <option value="r&b">R&B</option>
+                            <option value="gospel">Gospel</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn">Add Track</button>
+                </form>
+            </div>
+
+            <div class="content-grid" id="musicGrid">
+                <!-- Music tracks will be populated here -->
+            </div>
+        </section>
+
+        <!-- Live Section -->
+        <section id="live" class="section">
+            <h2 class="section-title">Live Streams</h2>
+            
+            <div class="admin-panel" id="liveAdminPanel" style="display: none;">
+                <h3>Add Live Stream</h3>
+                <form class="admin-form" id="liveForm">
+                    <div class="form-group">
+                        <label>Stream Title</label>
+                        <input type="text" id="liveTitle" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Stream URL</label>
+                        <input type="url" id="liveUrl" required placeholder="YouTube Live, Facebook Live, or RTMP URL">
+                    </div>
+                    <div class="form-group">
+                        <label>Status</label>
+                        <select id="liveStatus">
+                            <option value="live">Live Now</option>
+                            <option value="scheduled">Scheduled</option>
+                            <option value="ended">Ended</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn">Add Stream</button>
+                </form>
+            </div>
+
+            <div class="content-grid" id="liveGrid">
+                <!-- Live streams will be populated here -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Video Player Modal -->
+    <div class="video-player" id="videoPlayer">
+        <div class="video-container">
+            <button class="close-btn" onclick="closeVideo()">&times;</button>
+            <video id="videoElement" controls>
+                Your browser does not support the video tag.
+            </video>
+            <div class="video-info">
+                <h3 id="currentVideoTitle">Video Title</h3>
+                <p id="currentVideoDescription">Video description goes here...</p>
+                <div class="content-meta">
+                    <span id="currentVideoViews">1.2M views</span> • 
+                    <span id="currentVideoDate">2 days ago</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Music Player -->
+    <div class="music-player" id="musicPlayer">
+        <div class="player-controls">
+            <div class="track-info">
+                <div id="currentTrackTitle">No track selected</div>
+                <div id="currentTrackArtist" style="color: var(--text-secondary); font-size: 0.9rem;">MGoddy</div>
+            </div>
+            <div class="controls">
+                <button class="control-btn" onclick="previousTrack()"><i class="fas fa-step-backward"></i></button>
+                <button class="control-btn" id="playPauseBtn" onclick="togglePlayPause()"><i class="fas fa-play"></i></button>
+                <button class="control-btn" onclick="nextTrack()"><i class="fas fa-step-forward"></i></button>
+                <button class="control-btn" onclick="toggleShuffle()"><i class="fas fa-random"></i></button>
+                <button class="control-btn" onclick="toggleRepeat()"><i class="fas fa-redo"></i></button>
+            </div>
+            <div class="progress-bar">
+                <input type="range" id="progressSlider" min="0" max="100" value="0">
+                <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.25rem;">
+                    <span id="currentTime">0:00</span>
+                    <span id="totalTime">0:00</span>
+                </div>
+            </div>
+            <div class="controls">
+                <button class="control-btn" onclick="toggleMute()"><i class="fas fa-volume-up"></i></button>
+                <input type="range" id="volumeSlider" min="0" max="100" value="70" style="width: 80px; accent-color: var(--accent);">
+            </div>
+        </div>
+        <audio id="audioElement"></audio>
+    </div>
+
+    <script>
+        // Sample data - in a real app, this would come from a database
+        let contentData = {
+            videos: [
+                {
+                    id: 1,
+                    title: "THE CARDS",
+                    description: "Epic cinematic masterpiece showcasing the journey of a king. Just kidding, this is my first ever video.",
+                    url: "https://drive.google.com/file/d/13zz720AL6CCJgLOE9wVuhKwqTooFUTLg/view?usp=drivesdk",
+                    category: "drama",
+                    views: "2.4M",
+                    date: "3 months ago",
+                    featured: true,
+                    trending: true
+                },
+                {
+                    id: 2,
+                    title: "Behind the Scenes: Studio Sessions",
+                    description: "Exclusive look into MGoddy's creative process.",
+                    url: "https://drive.google.com/file/d/1uYpGEiZV7oGuoVB7ls7YBxmfD-22_xw4/view?usp=drivesdk",
+                    category: "editing",
+                    views: "856K",
+                    date: "1 week ago",
+                    featured: true
+                },
+                {
+                    id: 3,
+                    title: "theme",
+                    description: "Hilarious take on everyday situations.",
+                    url: "https://drive.google.com/file/d/1P6458ges8ZepXaazeq1RBxRLUBODXWR8/view?usp=drivesdk",
+                    category: "editing",
+                    views: "1.8K",
+                    date: "5 months ago",
+                    trending: true
+                },
+                {
+                    id: 4,
+                    title: "Mavuno squad",
+                    description: "first mavuno video.",
+                    url: "https://drive.google.com/file/d/1ZI-ykEKyAFFKUMoxMXXuc2YWmXObekQS/view?usp=drivesdk",
+                    category: "church",
+                    views: "1.9K",
+                    date: "5 months ago",
+                    trending: true
+                    featured: true
+                },
+                {
+                    id: 5,
+                    title: "Aurora",
+                    description: "first aurora video.",
+                    url: "https://drive.google.com/file/d/1MLdGx_WqMzfNZs6jjphl2Bjz58dcS_JE/view?usp=drivesdk",
+                    category: "business",
+                    views: "1.9K",
+                    date: "4 months ago",
+                    trending: true
+                },
+                {
+                    id: 6,
+                    title: "Aurora redone",
+                    description: "first aurora video redone.",
+                    url: "https://drive.google.com/file/d/1SAg1bDTEE2kKwmABoY5z5ceKwzqDddem/view?usp=drivesdk",
+                    category: "business",
+                    views: "1.9K",
+                    date: "4 months ago",
+                    trending: true
+                    featured: true
+                },
+                {
+                    id: 7,
+                    title: "Aurora code society of kenya",
+                    description: "aurora new dawn and code society of kenya works tongether.",
+                    url: "https://drive.google.com/file/d/1qGIqiBW2_nsyvpZvXbBoQpfObfM1uI5n/view?usp=drivesdk",
+                    category: "business",
+                    views: "1.9M",
+                    date: "4 months ago",
+                    trending: true
+                    featured: true
+                },
+                {
+                    id: 8,
+                    title: "Mavuno church outreach",
+                    description: "mavuno church autreach video voulume one.",
+                    url: "https://drive.google.com/file/d/11cQNMxCbnP3jzdvJwZGngps0gRawb2BT/view?usp=drivesdk",
+                    category: "church",
+                    views: "98K",
+                    date: "4 months ago",
+                    featured: true
+                },
+                {
+                    id: 9,
+                    title: "Mavuno church autreach redone",
+                    description: "mavuno church outreach trailer redone to add the church aim.",
+                    url: "https://drive.google.com/file/d/1BlJlIXJQTwNQQXM_jvc123X-j0uzVnb3/view?usp=drivesdk",
+                    category: "church",
+                    views: "1.9K",
+                    date: "3 months ago",
+                    trending: true
+                    featured: true
+                },
+                {
+                    id: 10,
+                    title: "WAR mavuno church version",
+                    description: "to show case how a sunday service was filled with joy.",
+                    url: "https://drive.google.com/file/d/1KalZ_MZif812s0tt8FEKZQrdOM0jAy1m/view?usp=drivesdk",
+                    category: "church",
+                    views: "900K",
+                    date: "3 months ago",
+                    featured: true
+                },
+                {
+                    id: 11,
+                    title: "WAR redone",
+                    description: "this vodeo is a redone of the WAR mavuno church version.",
+                    url: "https://drive.google.com/file/d/1mJSOKfOPNuQpFz02JWO5NJKCuw9RZPhn/view?usp=drivesdk",
+                    category: "church",
+                    views: "1.9K",
+                    date: "5 months ago",
+                    featured: true
+                },
+                {
+                    id: 12,
+                    title: "WAR text",
+                    description: "a green screen video showing the behinde the scenes war text.",
+                    url: "https://drive.google.com/file/d/1izGqlM0REzX2AIoPmIr0cYFXE9rlKJ1y/view?usp=drivesdk",
+                    category: "editing",
+                    views: "1M",
+                    date: "4 months ago",
+                    trending: true
+                    featured: true
+                },
+                {
+                    id: 13,
+                    title: "Father Abraham",
+                    description: "mavuno church singing.",
+                    url: "https://drive.google.com/file/d/1eRsocq9mzl9GuumbgrQfMuXw6MS8sA6r/view?usp=drivesdk",
+                    category: "church",
+                    views: "5.4K",
+                    date: "4 months ago",
+                },
+                {
+                    id: 14,
+                    title: "video de doctor",
+                    description: "most hard video I have ever edited under pressure.",
+                    url: "https://drive.google.com/file/d/12SK1R_EbJhv5z11TAQ8nh2PgeKjDJpB4/view?usp=drivesdk",
+                    category: "work",
+                    views: "1.9K",
+                    date: "3 months ago",
+                    featured: true
+                },
+                {
+                    id: 15,
+                    title: "video de doctor carto",
+                    description: "short version video for the doctor.",
+                    url: "https://drive.google.com/file/d/1drrrorVzlw73DHjNWS-Z9xF9frb_jni-/view?usp=drivesdk",
+                    category: "work",
+                    views: "1.9K",
+                    date: "3 months ago",
+                    trending: true
+                    featured: true
+                },
+                {
+                    id: 16,
+                    title: "vision pulse tv",
+                    description: "trying to imitate inooro tv.",
+                    url: "https://drive.google.com/file/d/19uQbQCE7QnTACr0PbSseX81sCfIvHo5z/view?usp=drivesdk",
+                    category: "animation",
+                    views: "900K",
+                    date: "3 months ago",
+                    featured: true
+                    trending: true
+                },
+                {
+                    id: 17,
+                    title: "Mini-Qati",
+                    description: "A video showing the reformainiqati held in Kisumu.",
+                    url: "https://drive.google.com/file/d/19KdOIs87lpE_m9XaMbqrstkqIo3fYPGe/view?usp=drivesdk",
+                    category: "business",
+                    views: "9K",
+                    date: "2 months ago",
+                    featured: true
+                    trending: true
+                },
+                {
+                    id: 18,
+                    title: "Trying to make road",
+                    description: "I spent 24 hrs trying to make this road.",
+                    url: "https://drive.google.com/file/d/1Jq6XlM3jAuO6Y1Vyj11mqK7gFmiOXxt4/view?usp=drivesdk",
+                    category: "animation",
+                    views: "109K",
+                    date: "4 months ago",
+                    trending: true
+                    featured: true
+                },
+                {
+                    id: 19,
+                    title: "Emotion wellness",
+                    description: "Aurora emotional wellness program.",
+                    url: "https://drive.google.com/file/d/1D6pDfIEbzmRODkw1RRgrcn_Npd7cdKi3/view?usp=drivesdk",
+                    category: "business",
+                    views: "90K",
+                    date: "2 months ago",
+                    featured: true
+                },
+                {
+                    id: 20,
+                    title: "dracular mode",
+                    description: "using capcut to make myself a dracula.",
+                    url: "https://drive.google.com/file/d/1WKKlYuSz_RHiii1vjRsYybpCdPYZaER0/view?usp=drivesdk",
+                    category: "fun",
+                    views: "10M",
+                    date: "3 months ago",
+                    featured: true
+                    trending: true
+                }
+            ],
+            music: [
+                {
+                    id: 1,
+                    title: "Money on my mind",
+                    artist: "MGoddy",
+                    album: "The Vault",
+                    url: "https://drive.google.com/file/d/1Klq3J4rqc0JbQHJjmhJfUexpaYqfbVfm/view?usp=drivesdk",
+                    genre: "hip-hop",
+                    duration: "3:45",
+                    featured: true
+                },
+                {
+                    id: 2,
+                    title: "GM empire",
+                    artist: "AI",
+                    album: "The Vault",
+                    url: "https://drive.google.com/file/d/1LQv5Vf1naJHtK5IkwDUzOk49s72MjmpO/view?usp=drivesdk",
+                    genre: "trap",
+                    duration: "4:12",
+                    trending: true
+                },
+                {
+                    id: 3,
+                    title: "Rise of the under dog",
+                    artist: "AI",
+                    album: "The Vault",
+                    url: "https://drive.google.com/file/d/15m2zRWX6S-9HYMHEef0HHfZk_4jQBTHp/view?usp=drivesdk",
+                    genre: "trap",
+                    duration: "3:28",
+                    featured: true
+                    trending: true
+                }
+            ],
+            live: [
+                {
+                    id: 1,
+                    title: "Planet shakers Tv",
+                    url: "https://www.youtube.com/live/oGlZ0eKPA0o?si=e32EywQBHfiMDj62",
+                    status: "live",
+                    viewers: "102K"
+                },
+                {
+                    id: 2,
+                    title: "Q&A with MGoddy",
+                    url: "https://www.youtube.com/live/d9e-Lu2laYM?si=cZrxBmuKmL4iR4yk",
+                    status: "live",
+                    viewers: "200K"
+                }
+            ]
+        };
+
+        let currentPlaylist = [];
+        let currentTrackIndex = 0;
+        let isPlaying = false;
+        let isAdmin = false;
+        let audioElement = document.getElementById('audioElement');
+        let videoElement = document.getElementById('videoElement');
+
+        // Navigation
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const section = item.dataset.section;
+                showSection(section);
+                
+                document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+                item.classList.add('active');
+            });
+        });
+
+        function showSection(sectionName) {
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(sectionName).classList.add('active');
+            
+            if (sectionName === 'home') loadHomePage();
+            else if (sectionName === 'videos') loadVideos();
+            else if (sectionName === 'music') loadMusic();
+            else if (sectionName === 'live') loadLive();
+        }
+
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase();
+            searchContent(query);
+        });
+
+        function searchContent(query) {
+            if (!query) {
+                showSection('home');
+                return;
+            }
+
+            const results = [];
+            
+            // Search videos
+            contentData.videos.forEach(video => {
+                if (video.title.toLowerCase().includes(query) || 
+                    video.description.toLowerCase().includes(query) ||
+                    video.category.toLowerCase().includes(query)) {
+                    results.push({...video, type: 'video'});
+                }
+            });
+
+            // Search music
+            contentData.music.forEach(track => {
+                if (track.title.toLowerCase().includes(query) || 
+                    track.artist.toLowerCase().includes(query) ||
+                    track.album.toLowerCase().includes(query) ||
+                    track.genre.toLowerCase().includes(query)) {
+                    results.push({...track, type: 'music'});
+                }
+            });
+
+            displaySearchResults(results);
+        }
+
+        function displaySearchResults(results) {
+            const homeSection = document.getElementById('home');
+            homeSection.innerHTML = `
+                <h2 class="section-title">Search Results (${results.length})</h2>
+                <div class="content-grid" id="searchResults"></div>
+            `;
+            
+            const grid = document.getElementById('searchResults');
+            
+            if (results.length === 0) {
+                grid.innerHTML = '<p style="color: var(--text-secondary); text-align: center; grid-column: 1/-1;">No results found.</p>';
+                return;
+            }
+
+            results.forEach(item => {
+                const card = createContentCard(item, item.type);
+                grid.appendChild(card);
+            });
+        }
+
+        // Load content functions
+        function loadHomePage() {
+            loadFeaturedContent();
+            loadTrendingContent();
+        }
+
+        function loadFeaturedContent() {
+            const container = document.getElementById('featuredContent');
+            container.innerHTML = '';
+            
+            const featured = [
+                ...contentData.videos.filter(v => v.featured),
+                ...contentData.music.filter(m => m.featured)
+            ];
+
+            featured.forEach(item => {
+                const type = contentData.videos.includes(item) ? 'video' : 'music';
+                const card = createContentCard(item, type);
+                container.appendChild(card);
+            });
+        }
+
+        function loadTrendingContent() {
+            const container = document.getElementById('trendingContent');
+            container.innerHTML = '';
+            
+            const trending = [
+                ...contentData.videos.filter(v => v.trending),
+                ...contentData.music.filter(m => m.trending)
+            ];
+
+            trending.forEach(item => {
+                const type = contentData.videos.includes(item) ? 'video' : 'music';
+                const card = createContentCard(item, type);
+                container.appendChild(card);
+            });
+        }
+
+        function loadVideos() {
+            const container = document.getElementById('videosGrid');
+            container.innerHTML = '';
+            
+            contentData.videos.forEach(video => {
+                const card = createContentCard(video, 'video');
+                container.appendChild(card);
+            });
+        }
+
+        function loadMusic() {
+            const container = document.getElementById('musicGrid');
+            container.innerHTML = '';
+            
+            contentData.music.forEach(track => {
+                const card = createContentCard(track, 'music');
+                container.appendChild(card);
+            });
+        }
+
+        function loadLive() {
+            const container = document.getElementById('liveGrid');
+            container.innerHTML = '';
+            
+            contentData.live.forEach(stream => {
+                const card = createContentCard(stream, 'live');
+                container.appendChild(card);
+            });
+        }
+
+        // Create content cards
+        function createContentCard(item, type) {
+            const card = document.createElement('div');
+            card.className = 'content-card';
+            
+            let icon, info, onclick;
+            
+            if (type === 'video') {
+                icon = 'fas fa-play';
+                info = `<div class="content-meta">${item.views} views • ${item.date}</div>`;
+                onclick = `playVideo(${item.id})`;
+            } else if (type === 'music') {
+                icon = 'fas fa-music';
+                info = `<div class="content-meta">${item.artist} • ${item.duration || '3:45'}</div>`;
+                onclick = `playTrack(${item.id})`;
+            } else if (type === 'live') {
+                icon = item.status === 'live' ? 'fas fa-broadcast-tower' : 'fas fa-calendar';
+                info = `<div class="content-meta">${item.status === 'live' ? item.viewers + ' watching' : item.scheduledTime || 'Scheduled'}</div>`;
+                onclick = `openLiveStream(${item.id})`;
+            }
+
+            card.innerHTML = `
+                <div class="content-thumbnail">
+                    <i class="${icon}"></i>
+                    <div class="play-overlay">
+                        <i class="fas fa-play"></i>
+                    </div>
+                    ${type === 'live' && item.status === 'live' ? '<div class="live-badge">LIVE</div>' : ''}
+                </div>
+                <div class="content-info">
+                    <div class="content-title">${item.title}</div>
+                    ${info}
+                </div>
+            `;
+            
+            card.onclick = () => eval(onclick);
+            return card;
+        }
+
+        // Video player functions
+        function playVideo(videoId) {
+            const video = contentData.videos.find(v => v.id === videoId);
+            if (!video) return;
+
+            const player = document.getElementById('videoPlayer');
+            const videoElement = document.getElementById('videoElement');
+            
+            // Convert Google Drive link to direct link
+            const directUrl = convertGoogleDriveUrl(video.url);
+            videoElement.src = directUrl;
+            videoElement.setAttribute('data-video-id', video.id);
+            document.getElementById('currentVideoTitle').textContent = video.title;
+            document.getElementById('currentVideoDescription').textContent = video.description;
+            document.getElementById('currentVideoViews').textContent = video.views + ' views';
+            document.getElementById('currentVideoDate').textContent = video.date;
+            
+            player.style.display = 'flex';
+            videoElement.play();
+            
+            // Increment view count (fake)
+            video.views = incrementViewCount(video.views);
+        }
+
+        function closeVideo() {
+            const player = document.getElementById('videoPlayer');
+            const videoElement = document.getElementById('videoElement');
+            
+            videoElement.pause();
+            videoElement.src = '';
+            player.style.display = 'none';
+        }
+
+        // Music player functions
+        function playTrack(trackId) {
+            const track = contentData.music.find(t => t.id === trackId);
+            if (!track) return;
+
+            currentPlaylist = contentData.music;
+            currentTrackIndex = currentPlaylist.findIndex(t => t.id === trackId);
+            
+            loadCurrentTrack();
+            document.getElementById('musicPlayer').style.display = 'block';
+        }
+
+        function loadCurrentTrack() {
+            if (currentTrackIndex < 0 || currentTrackIndex >= currentPlaylist.length) return;
+
+            const track = currentPlaylist[currentTrackIndex];
+            const directUrl = convertGoogleDriveUrl(track.url);
+            
+            audioElement.src = directUrl;
+            document.getElementById('currentTrackTitle').textContent = track.title;
+            document.getElementById('currentTrackArtist').textContent = track.artist;
+            
+            audioElement.play();
+            isPlaying = true;
+            updatePlayPauseButton();
+        }
+
+        function togglePlayPause() {
+            if (isPlaying) {
+                audioElement.pause();
+                isPlaying = false;
+            } else {
+                audioElement.play();
+                isPlaying = true;
+            }
+            updatePlayPauseButton();
+        }
+
+        function updatePlayPauseButton() {
+            const btn = document.getElementById('playPauseBtn');
+            btn.innerHTML = isPlaying ? '<i class="fas fa-pause"></i>' : '<i class="fas fa-play"></i>';
+        }
+
+        function nextTrack() {
+            currentTrackIndex = (currentTrackIndex + 1) % currentPlaylist.length;
+            loadCurrentTrack();
+        }
+
+        function previousTrack() {
+            currentTrackIndex = currentTrackIndex === 0 ? currentPlaylist.length - 1 : currentTrackIndex - 1;
+            loadCurrentTrack();
+        }
+
+        function toggleShuffle() {
+            // Implement shuffle logic
+            console.log('Shuffle toggled');
+        }
+
+        function toggleRepeat() {
+            // Implement repeat logic
+            console.log('Repeat toggled');
+        }
+
+        function toggleMute() {
+            audioElement.muted = !audioElement.muted;
+            const btn = event.target.closest('button');
+            btn.innerHTML = audioElement.muted ? '<i class="fas fa-volume-mute"></i>' : '<i class="fas fa-volume-up"></i>';
+        }
+
+        // Live stream functions
+        function openLiveStream(streamId) {
+            const stream = contentData.live.find(s => s.id === streamId);
+            if (!stream) return;
+
+            if (stream.status === 'live') {
+                window.open(stream.url, '_blank');
+            } else {
+                alert(`Stream "${stream.title}" is ${stream.status}`);
+            }
+        }
+
+        // Admin functions
+        function toggleAdmin() {
+            isAdmin = !isAdmin;
+            const panels = document.querySelectorAll('.admin-panel');
+            panels.forEach(panel => {
+                panel.style.display = isAdmin ? 'block' : 'none';
+            });
+            
+            const btn = document.querySelector('.admin-btn');
+            btn.style.background = isAdmin ? 'var(--accent-hover)' : 'var(--accent)';
+        }
+
+        // Form handlers
+        document.getElementById('videoForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            
+            const newVideo = {
+                id: Date.now(),
+                title: document.getElementById('videoTitle').value,
+                description: document.getElementById('videoDescription').value,
+                url: document.getElementById('videoUrl').value,
+                category: document.getElementById('videoCategory').value,
+                views: Math.floor(Math.random() * 1000) + 'K',
+                date: 'Just now',
+                featured: false,
+                trending: false
+            };
+            
+            contentData.videos.push(newVideo);
+            loadVideos();
+            e.target.reset();
+            alert('Video added successfully!');
+        });
+
+        document.getElementById('musicForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const newTrack = {
+                id: Date.now(),
+                title: document.getElementById('trackTitle').value,
+                artist: document.getElementById('trackArtist').value,
+                album: document.getElementById('trackAlbum').value,
+                url: document.getElementById('trackUrl').value,
+                genre: document.getElementById('trackGenre').value,
+                duration: '3:' + (Math.floor(Math.random() * 60)).toString().padStart(2, '0'),
+                featured: false,
+                trending: false
+            };
+            
+            contentData.music.push(newTrack);
+            loadMusic();
+            e.target.reset();
+            alert('Track added successfully!');
+        });
+
+        document.getElementById('liveForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const newStream = {
+                id: Date.now(),
+                title: document.getElementById('liveTitle').value,
+                url: document.getElementById('liveUrl').value,
+                status: document.getElementById('liveStatus').value,
+                viewers: Math.floor(Math.random() * 5000) + Math.floor(Math.random() * 1000)
+            };
+            
+            contentData.live.push(newStream);
+            loadLive();
+            e.target.reset();
+            alert('Live stream added successfully!');
+        });
+
+        // Utility functions
+        function convertGoogleDriveUrl(url) {
+            // Convert Google Drive sharing URL to direct download URL
+            if (url.includes('drive.google.com')) {
+                const fileId = url.match(/\/d\/(.+?)\//)?.[1] || url.match(/id=(.+?)(&|$)/)?.[1];
+                if (!fileId) {
+    console.warn("⚠️ Could not extract Google Drive file ID from:", url);
+}
+                if (fileId) {
+                    return `https://drive.google.com/uc?export=download&id=${fileId}`;
+                }
+            }
+            return url;
+        }
+
+        function incrementViewCount(viewCount) {
+            const num = parseFloat(viewCount);
+            const unit = viewCount.slice(-1);
+            
+            if (unit === 'K') {
+                return (num + 0.1).toFixed(1) + 'K';
+            } else if (unit === 'M') {
+                return (num + 0.01).toFixed(2) + 'M';
+            }
+            
+            return viewCount;
+        }
+
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        // Audio player event listeners
+        audioElement.addEventListener('loadedmetadata', () => {
+            document.getElementById('totalTime').textContent = formatTime(audioElement.duration);
+            document.getElementById('progressSlider').max = audioElement.duration;
+        });
+
+        audioElement.addEventListener('timeupdate', () => {
+            const progress = (audioElement.currentTime / audioElement.duration) * 100;
+            document.getElementById('progressSlider').value = audioElement.currentTime;
+            document.getElementById('currentTime').textContent = formatTime(audioElement.currentTime);
+        });
+
+        audioElement.addEventListener('ended', () => {
+            nextTrack();
+        });
+
+        document.getElementById('progressSlider').addEventListener('input', (e) => {
+            audioElement.currentTime = e.target.value;
+        });
+
+        document.getElementById('volumeSlider').addEventListener('input', (e) => {
+            audioElement.volume = e.target.value / 100;
+        });
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', () => {
+            loadHomePage();
+            audioElement.volume = 0.7;
+        });
+
+        // Close video player when clicking outside
+        document.getElementById('videoPlayer').addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) {
+                closeVideo();
+            }
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space') {
+                e.preventDefault();
+                if (document.getElementById('musicPlayer').style.display === 'block') {
+                    togglePlayPause();
+                }
+            } else if (e.code === 'Escape') {
+                closeVideo();
+            }
+        });
+
+        // Responsive navigation
+        window.addEventListener('resize', () => {
+            if (window.innerWidth <= 768) {
+                // Mobile adjustments
+                document.querySelector('.nav-container').style.flexDirection = 'column';
+            } else {
+                document.querySelector('.nav-container').style.flexDirection = 'row';
+            }
+        });
+
+        // Auto-play next video feature
+        videoElement.addEventListener('ended', () => {
+            const currentVideoId = parseInt(videoElement.getAttribute('data-video-id'));
+            const currentIndex = contentData.videos.findIndex(v => v.id === currentVideoId);
+            const nextVideo = contentData.videos[currentIndex + 1];
+            
+            if (nextVideo) {
+                setTimeout(() => playVideo(nextVideo.id), 2000);
+            }
+        });
+
+        // Lazy loading for better performance
+        const observerOptions = {
+            root: null,
+            rootMargin: '50px',
+            threshold: 0.1
+        };
+
+        const imageObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const img = entry.target;
+                    // Load actual thumbnails here
+                    imageObserver.unobserve(img);
+                }
+            });
+        }, observerOptions);
+
+        // Add some dynamic stats updates
+        setInterval(() => {
+            const statNumbers = document.querySelectorAll('.stat-number');
+            statNumbers.forEach(stat => {
+                if (Math.random() < 0.3) { // 30% chance to update
+                    const current = parseFloat(stat.textContent);
+                    const unit = stat.textContent.slice(-1);
+                    if (unit === 'K') {
+                        stat.textContent = (current + Math.random() * 0.5).toFixed(1) + 'K';
+                    } else if (unit === 'M') {
+                        stat.textContent = (current + Math.random() * 0.01).toFixed(1) + 'M';
+                    }
+                }
+            });
+        }, 30000); // Update every 30 seconds
+
+        console.log('MGoddy Stream: The Vault of the King - Initialized wSuccessfully! 👑'); 
