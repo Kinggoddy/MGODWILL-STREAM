@@ -763,7 +763,7 @@
                     views: "1.8K",
                     date: "5 months ago",
                     trending: true
-                }
+                },
                 {
                     id: 4,
                     title: "Mavuno squad",
@@ -774,7 +774,7 @@
                     date: "5 months ago",
                     trending: true
                     featured: true
-                }
+                },
                 {
                     id: 5,
                     title: "Aurora",
@@ -784,7 +784,7 @@
                     views: "1.9K",
                     date: "4 months ago",
                     trending: true
-                }
+                },
                 {
                     id: 6,
                     title: "Aurora redone",
@@ -795,7 +795,7 @@
                     date: "4 months ago",
                     trending: true
                     featured: true
-                }
+                },
                 {
                     id: 7,
                     title: "Aurora code society of kenya",
@@ -806,17 +806,17 @@
                     date: "4 months ago",
                     trending: true
                     featured: true
-                }
+                },
                 {
                     id: 8,
                     title: "Mavuno church outreach",
                     description: "mavuno church autreach video voulume one.",
                     url: "https://drive.google.com/file/d/11cQNMxCbnP3jzdvJwZGngps0gRawb2BT/view?usp=drivesdk",
                     category: "church",
-                    views: "90",
+                    views: "98K",
                     date: "4 months ago",
                     featured: true
-                }
+                },
                 {
                     id: 9,
                     title: "Mavuno church autreach redone",
@@ -827,7 +827,7 @@
                     date: "3 months ago",
                     trending: true
                     featured: true
-                }
+                },
                 {
                     id: 10,
                     title: "WAR mavuno church version",
@@ -836,8 +836,8 @@
                     category: "church",
                     views: "900K",
                     date: "3 months ago",
-                    feature: true
-                }
+                    featured: true
+                },
                 {
                     id: 11,
                     title: "WAR redone",
@@ -847,27 +847,27 @@
                     views: "1.9K",
                     date: "5 months ago",
                     featured: true
-                }
+                },
                 {
                     id: 12,
                     title: "WAR text",
                     description: "a green screen video showing the behinde the scenes war text.",
                     url: "https://drive.google.com/file/d/1izGqlM0REzX2AIoPmIr0cYFXE9rlKJ1y/view?usp=drivesdk",
                     category: "editing",
-                    views: "109B",
+                    views: "1M",
                     date: "4 months ago",
                     trending: true
                     featured: true
-                }
+                },
                 {
                     id: 13,
                     title: "Father Abraham",
                     description: "mavuno church singing.",
                     url: "https://drive.google.com/file/d/1eRsocq9mzl9GuumbgrQfMuXw6MS8sA6r/view?usp=drivesdk",
                     category: "church",
-                    views: "90",
+                    views: "5.4K",
                     date: "4 months ago",
-                }
+                },
                 {
                     id: 14,
                     title: "video de doctor",
@@ -877,7 +877,7 @@
                     views: "1.9K",
                     date: "3 months ago",
                     featured: true
-                }
+                },
                 {
                     id: 15,
                     title: "video de doctor carto",
@@ -888,7 +888,7 @@
                     date: "3 months ago",
                     trending: true
                     featured: true
-                }
+                },
                 {
                     id: 16,
                     title: "vision pulse tv",
@@ -897,9 +897,9 @@
                     category: "animation",
                     views: "900K",
                     date: "3 months ago",
-                    feature: true
+                    featured: true
                     trending: true
-                }
+                },
                 {
                     id: 17,
                     title: "Mini-Qati",
@@ -910,34 +910,35 @@
                     date: "2 months ago",
                     featured: true
                     trending: true
-                }
+                },
                 {
                     id: 18,
                     title: "Trying to make road",
                     description: "I spent 24 hrs trying to make this road.",
                     url: "https://drive.google.com/file/d/1Jq6XlM3jAuO6Y1Vyj11mqK7gFmiOXxt4/view?usp=drivesdk",
                     category: "animation",
-                    views: "109B",
+                    views: "109K",
                     date: "4 months ago",
                     trending: true
                     featured: true
-                }
+                },
                 {
                     id: 19,
                     title: "Emotion wellness",
                     description: "Aurora emotional wellness program.",
                     url: "https://drive.google.com/file/d/1D6pDfIEbzmRODkw1RRgrcn_Npd7cdKi3/view?usp=drivesdk",
                     category: "business",
-                    views: "90B",
+                    views: "90K",
                     date: "2 months ago",
-                }
+                    featured: true
+                },
                 {
                     id: 20,
                     title: "dracular mode",
                     description: "using capcut to make myself a dracula.",
                     url: "https://drive.google.com/file/d/1WKKlYuSz_RHiii1vjRsYybpCdPYZaER0/view?usp=drivesdk",
                     category: "fun",
-                    views: "1000T",
+                    views: "10M",
                     date: "3 months ago",
                     featured: true
                     trending: true
@@ -1197,8 +1198,8 @@
             
             // Convert Google Drive link to direct link
             const directUrl = convertGoogleDriveUrl(video.url);
-            
             videoElement.src = directUrl;
+            videoElement.setAttribute('data-video-id', video.id);
             document.getElementById('currentVideoTitle').textContent = video.title;
             document.getElementById('currentVideoDescription').textContent = video.description;
             document.getElementById('currentVideoViews').textContent = video.views + ' views';
@@ -1379,6 +1380,9 @@
             // Convert Google Drive sharing URL to direct download URL
             if (url.includes('drive.google.com')) {
                 const fileId = url.match(/\/d\/(.+?)\//)?.[1] || url.match(/id=(.+?)(&|$)/)?.[1];
+                if (!fileId) {
+    console.warn("⚠️ Could not extract Google Drive file ID from:", url);
+}
                 if (fileId) {
                     return `https://drive.google.com/uc?export=download&id=${fileId}`;
                 }
